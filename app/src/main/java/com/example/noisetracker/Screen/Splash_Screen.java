@@ -21,7 +21,7 @@ import com.example.noisetracker.R;
 import com.google.android.material.button.MaterialButton;
 
 public class Splash_Screen extends Activity_Base {
-     private final int REQUEST_CODE = 123;
+    private final int REQUEST_CODE = 123;
     /**
      * Duration of wait
      **/
@@ -47,9 +47,9 @@ public class Splash_Screen extends Activity_Base {
     }
 
 
-    private void navigateToMainActivity(){
+    private void navigateToMainActivity() {
         /* Create an Intent that will start the Main-Activity. */
-        Splash_Screen.this.startActivity( new Intent(Splash_Screen.this, Main_Screen.class));
+        Splash_Screen.this.startActivity(new Intent(Splash_Screen.this, Main_Screen.class));
         Splash_Screen.this.finish();
     }
 
@@ -118,6 +118,4 @@ public class Splash_Screen extends Activity_Base {
                                 }).show();
         alertDialog.setCanceledOnTouchOutside(true);
     }
-
-
 }

@@ -40,6 +40,10 @@ public class Service_Sound_Meter extends Service {
     public static String CHANNEL_ID = "com.example.noisetracker.CHANNEL_ID_FOREGROUND";
     public static String MAIN_ACTION = "com.example.noisetracker.appService.action.main";
 
+    private final int RECORD_DELAY_LENGTH = 300;
+
+    private final int START_RECORD_DELAY_LENGTH = 600;
+
     public static int NOTIFICATION_ID = 153;
     private int lastShownNotificationId = -1;
     private boolean isServiceRunningRightNow = false;
@@ -84,36 +88,36 @@ public class Service_Sound_Meter extends Service {
             int day = calendar.get(Calendar.DAY_OF_WEEK);
 
             liveDb = getAmplitude();
-            double toSend =Math.round(liveDb);
-            if(toSend!=0.0) { // Make sure thread stops sending measurement if no input sound detected
+            double toSend = Math.round(liveDb);
+            if (toSend != 0.0) { // Make sure thread stops sending measurement if no input sound detected
                 if (maxDb <= toSend) {   // Find maximum result for final result
                     maxDb = toSend;
                 }
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        Log.d("day","" + day);
-                        DatabaseClient.getInstance(getApplicationContext()).getAppDatabase().soundDao().incrementDbValue(day, toSend,maxDb);
+                        Log.d("day", "" + day);
+                        DatabaseClient.getInstance(getApplicationContext()).getAppDatabase().soundDao().incrementDbValue(day, toSend, maxDb);
                     }
                 }).start();
                 Log.d("toSend", "" + toSend);
                 Log.d("maxDb", "" + maxDb);
             }
-                mHandler.postDelayed(mPollTask, 300);
+            mHandler.postDelayed(mPollTask, RECORD_DELAY_LENGTH);
         }
     };
     private Runnable mSleepTask = new Runnable() {
         public void run() {
-            //Clean Database After a WEEK
+            //Clean Database
             DatabaseClient.getInstance(getApplicationContext()).getAppDatabase().soundDao().deleteAll();
-            SimpleDateFormat sdf =  new SimpleDateFormat("dd/MM/yyyy");
-            for(int i = 0; i < 7; i++) {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            for (int i = 0; i < 7; i++) {
                 calendar = new GregorianCalendar();
                 calendar.add(Calendar.DATE, i);
                 String date = sdf.format(calendar.getTime());
                 int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
                 DatabaseClient.getInstance(getApplicationContext()).getAppDatabase().soundDao().
-                        insertAll(new Sound(dayOfWeek,date));
+                        insertAll(new Sound(dayOfWeek, date));
                 Log.i("date in task", date);
                 Log.d("day in dayOfWeek", "" + dayOfWeek);
             }
@@ -121,7 +125,7 @@ public class Service_Sound_Meter extends Service {
             startRecorder();
             //Noise monitoring start
             // Runnable(mPollTask) will execute after POLL_INTERVAL
-            mHandler.postDelayed(mPollTask, 600);
+            mHandler.postDelayed(mPollTask, START_RECORD_DELAY_LENGTH);
         }
     };
 
@@ -133,23 +137,21 @@ public class Service_Sound_Meter extends Service {
     }
 
     private void stopRecording() {
-        if(mRecorder != null){
+        if (mRecorder != null) {
             // Stopping the recorder when service is destroyed
             stopRecorder();
         }
     }
 
-    public void startRecorder(){
-        if (mRecorder == null)
-        {
+    public void startRecorder() {
+        if (mRecorder == null) {
             // Initialize media recorder
             mRecorder = new MediaRecorder();
             mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
             mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
             mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
             mRecorder.setOutputFile("/dev/null");
-            try
-            {
+            try {
                 mRecorder.prepare();
             } catch (IllegalStateException e) {
                 Toast.makeText(getApplicationContext(), "IllegalStateException called", Toast.LENGTH_LONG).show();
@@ -168,7 +170,7 @@ public class Service_Sound_Meter extends Service {
             mHandler.removeCallbacks(mPollTask); // Remove pending posts
             mHandler.removeCallbacks(mSleepTask); // Remove pending posts
             mThread.interrupt(); // Kill thread
-             //Stop media recorder
+            //Stop media recorder
             mRecorder.stop();
 
             // Free allocated memory for recorder
@@ -185,14 +187,13 @@ public class Service_Sound_Meter extends Service {
             // at the microphone is 0.6325 Pascal.
             // it does a comparison with the previous value of getMaxAmplitude.
             // we need to divide maxAmplitude with (32767/0.6325)
-            double f1 = mRecorder.getMaxAmplitude()/51805.5336;//51805.5336 or if 100db so 46676.6381
-            if (f1>0) {
+            double f1 = mRecorder.getMaxAmplitude() / 51805.5336;//51805.5336 or if 100db so 46676.6381
+            if (f1 > 0) {
                 //Assuming that the minimum reference pressure is 0.000085 Pascal (on most phones) is equal to 0 db
                 return (Math.abs(20 * Math.log10(f1 / 0.000085)));
             }
             return 0;
-        }
-        else
+        } else
             return 0;
 
     }

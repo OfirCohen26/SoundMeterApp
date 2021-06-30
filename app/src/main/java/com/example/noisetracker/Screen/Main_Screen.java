@@ -6,7 +6,7 @@ import androidx.fragment.app.Fragment;
 import android.os.Bundle;
 import android.view.MenuItem;
 
-import com.example.noisetracker.Fragment.Fragment_Graph;
+import com.example.noisetracker.Fragment.Fragment_Bar_Chart;
 import com.example.noisetracker.Fragment.Fragment_Menu;
 import com.example.noisetracker.R;
 import com.example.noisetracker.Utils.Activity_Base;
@@ -40,7 +40,7 @@ public class Main_Screen extends Activity_Base {
                     selectedFragment = new Fragment_Menu();
                     break;
                 case R.id.nav_BTN_bar_chart:
-                    selectedFragment = new Fragment_Graph();
+                    selectedFragment = new Fragment_Bar_Chart();
                     break;
             }
 

@@ -10,7 +10,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -32,12 +31,14 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
-import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class Fragment_Graph  extends Fragment {
+public class Fragment_Bar_Chart extends Fragment {
+
+    private final int INIT_BAR_CHART_DELAY_LENGTH = 300;
+
     private BarChart bar_chart_BAR_barChart;
 
     private Thread mThread;
@@ -49,7 +50,7 @@ public class Fragment_Graph  extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_graph, container, false);
+        return inflater.inflate(R.layout.fragment_bar_chart, container, false);
     }
 
     @Override
@@ -61,6 +62,7 @@ public class Fragment_Graph  extends Fragment {
     private void findViews(View view) {
         bar_chart_BAR_barChart = (BarChart) view.findViewById(R.id.bar_chart_BAR_barChart);
     }
+
     private Runnable mSleepTask = new Runnable() {
         public void run() {
             sounds = DatabaseClient.getInstance(getActivity().getApplicationContext()).getAppDatabase().soundDao().getAll();
@@ -69,9 +71,9 @@ public class Fragment_Graph  extends Fragment {
             mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    initGraph();
+                    initBarChart();
                 }
-            }, 300);
+            }, INIT_BAR_CHART_DELAY_LENGTH);
         }
     };
 
@@ -83,18 +85,18 @@ public class Fragment_Graph  extends Fragment {
         mThread.start();
     }
 
-    private void initGraph() {
+    private void initBarChart() {
         String[] labels = {"Sun", "Mond", "Tues", "Wed", "Thus", "Fri", "sat"};
         ArrayList<BarEntry> soundLevel = new ArrayList<>();
 
-        Log.d(" " ,"sound lengh" + sounds.length);
+        Log.d(" ", "sound lengh" + sounds.length);
 
-        if(sounds.length > 0) {
-            for(int i = 0; i < 7; i++) {
+        if (sounds.length > 0) {
+            for (int i = 0; i < 7; i++) {
                 soundLevel.add(new BarEntry(i, (int) sounds[i].getDailyAmountDb()));
             }
         } else {
-            for(int i = 0; i < 7; i++) {
+            for (int i = 0; i < 7; i++) {
                 soundLevel.add(new BarEntry(i, 0));
             }
         }
@@ -125,28 +127,31 @@ public class Fragment_Graph  extends Fragment {
 
         bar_chart_BAR_barChart.setData(barData);
 
-        if(sounds.length >0 ){
-            bar_chart_BAR_barChart.setOnChartValueSelectedListener(
-                    new OnChartValueSelectedListener() {
-                        @RequiresApi(api = Build.VERSION_CODES.O)
-                        @Override
-                        public void onValueSelected(Entry e, Highlight h) {
-                            BarEntry pe = (BarEntry) e;
-                            if(sounds[(int)pe.getX()].dailyAmountDb > 0) {
-                                Toast toast = Toast.makeText(getActivity().getApplicationContext(),
-                                        "Date: " + sounds[(int) pe.getX()].getDate() + "\nMax dB: " + sounds[(int) pe.getX()].getMaxDb() + " dB"
-                                                +   "\nAvg dB: " + (int) sounds[(int) pe.getX()].dailyAmountDb / 24 + " dB" ,Toast.LENGTH_LONG);
-                                toast.setGravity(Gravity.CENTER, 0, 0);
-                                toast.show();
-                            }
-                        }
+        if (sounds.length > 0) {
+            onChartValueSelected();
+        }
+    }
 
-                        @Override
-                        public void onNothingSelected() {
+    private void onChartValueSelected() {
+        bar_chart_BAR_barChart.setOnChartValueSelectedListener(
+                new OnChartValueSelectedListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.O)
+                    @Override
+                    public void onValueSelected(Entry e, Highlight h) {
+                        BarEntry pe = (BarEntry) e;
+                        if (sounds[(int) pe.getX()].dailyAmountDb > 0) {
+                            Toast toast = Toast.makeText(getActivity().getApplicationContext(),
+                                    "Date: " + sounds[(int) pe.getX()].getDate() + "\nMax dB: " + sounds[(int) pe.getX()].getMaxDb() + " dB"
+                                            + "\nAvg dB: " + (int) sounds[(int) pe.getX()].dailyAmountDb / 24 + " dB", Toast.LENGTH_LONG);
+                            toast.setGravity(Gravity.CENTER, 0, 0);
+                            toast.show();
                         }
                     }
-            );
-        }
+                    @Override
+                    public void onNothingSelected() {
+                    }
+                }
+        );
     }
 
     @Override

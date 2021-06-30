@@ -16,9 +16,6 @@ public interface SoundDao {
     @Query("SELECT * FROM weekly_sound_measure WHERE day LIKE :search")
     public Sound findSoundWithDay(int search);
 
-    @Delete
-    void delete(Sound sound);
-
     @Query("SELECT * FROM weekly_sound_measure")
     Sound[] getAll();
 
