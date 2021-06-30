@@ -42,19 +42,14 @@ public class Service_Sound_Meter extends Service {
 
     public static int NOTIFICATION_ID = 153;
     private int lastShownNotificationId = -1;
-
     private boolean isServiceRunningRightNow = false;
-
     private NotificationCompat.Builder notificationBuilder;
 
     private MediaRecorder mRecorder;
-
     private double liveDb = 0;
-
     private double maxDb = 0.0;
 
     private Thread mThread;
-
     private Handler mHandler = new Handler();
 
     Calendar calendar;
@@ -173,7 +168,6 @@ public class Service_Sound_Meter extends Service {
             mHandler.removeCallbacks(mPollTask); // Remove pending posts
             mHandler.removeCallbacks(mSleepTask); // Remove pending posts
             mThread.interrupt(); // Kill thread
-
              //Stop media recorder
             mRecorder.stop();
 
@@ -181,7 +175,6 @@ public class Service_Sound_Meter extends Service {
             mRecorder.reset();
             mRecorder.release();
             mRecorder = null;
-
         }
     }
 
@@ -205,9 +198,7 @@ public class Service_Sound_Meter extends Service {
     }
 
     private void notifyToUserForForegroundService() {
-        // On notification click the home activity is opened
-       //Intent notificationIntent = new Intent(this, Home_Screen.class);
-
+        // On notification click the Main activity is opened
         Intent notificationIntent = new Intent(this, Main_Screen.class);
         notificationIntent.setAction(MAIN_ACTION);
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -225,8 +216,6 @@ public class Service_Sound_Meter extends Service {
                 .setContentTitle("App in progress");
 
         Notification notification = notificationBuilder.build();
-
-//        startForeground(NOTIFICATION_ID, notification);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             startForeground(NOTIFICATION_ID, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_MICROPHONE);

@@ -22,8 +22,10 @@ import com.google.android.material.button.MaterialButton;
 
 public class Splash_Screen extends Activity_Base {
      private final int REQUEST_CODE = 123;
-
-    private ImageView splash_screen_IMG_clock;
+    /**
+     * Duration of wait
+     **/
+    private final int SPLASH_DISPLAY_LENGTH = 3000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,13 +41,17 @@ public class Splash_Screen extends Activity_Base {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                /* Create an Intent that will start the Menu-Activity. */
-                Splash_Screen.this.startActivity( new Intent(Splash_Screen.this, Main_Screen.class));
-                Splash_Screen.this.finish();
+                navigateToMainActivity();
             }
-        }, 3);
+        }, SPLASH_DISPLAY_LENGTH);
     }
 
+
+    private void navigateToMainActivity(){
+        /* Create an Intent that will start the Main-Activity. */
+        Splash_Screen.this.startActivity( new Intent(Splash_Screen.this, Main_Screen.class));
+        Splash_Screen.this.finish();
+    }
 
     private boolean checkPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
@@ -76,11 +82,9 @@ public class Splash_Screen extends Activity_Base {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        /* Create an Intent that will start the Menu-Activity. */
-                        Splash_Screen.this.startActivity( new Intent(Splash_Screen.this, Main_Screen.class));
-                        Splash_Screen.this.finish();
+                        navigateToMainActivity();
                     }
-                }, 3);
+                }, SPLASH_DISPLAY_LENGTH);
 
             }
         }
