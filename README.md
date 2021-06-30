@@ -2,7 +2,7 @@
 
 # About:
 
- SoundMeter app uses your built-in microphone to measure sound volume in decibels (dB) over a week and also displays measured dB values on graph.
+ SoundMeter app uses your built-in microphone to measure sound volume in decibels (dB) over a week and also displays measured dB values in bar-chart.
  
  The SoundMeter app runs in the background and does not require user action. (Except activate the service)
  
