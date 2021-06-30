@@ -6,7 +6,7 @@
  
  The SoundMeter app runs in the background and does not require user action. (Except activate the service)
  
- The service can be turned off whenever the user wants it. (less than a week)
+ The service can be turned off whenever the user wants it.
  
  JAVA | Android studio | RoomDatabase | MPAndroidChart (library)
 
