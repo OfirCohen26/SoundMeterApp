@@ -17,7 +17,7 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/menu_page_BTN_start"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:layout_width="125dp"
+            android:layout_width="match_parent"
             android:layout_height="140dp"
             android:text="@string/start"
             android:textColor="@color/white"
@@ -32,7 +32,7 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/menu_page_BTN_finish"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:layout_width="125dp"
+            android:layout_width="match_parent"
             android:layout_height="140dp"
             android:text="@string/finish"
             android:textColor="@color/white"

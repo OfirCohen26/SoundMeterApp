@@ -13,9 +13,6 @@ public interface SoundDao {
     @Insert
     void insertAll(Sound... sounds);
 
-    @Query("SELECT * FROM weekly_sound_measure WHERE day LIKE :search")
-    public Sound findSoundWithDay(int search);
-
     @Query("SELECT * FROM weekly_sound_measure")
     Sound[] getAll();
 
