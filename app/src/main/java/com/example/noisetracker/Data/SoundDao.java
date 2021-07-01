@@ -13,7 +13,7 @@ public interface SoundDao {
     @Insert
     void insertAll(Sound... sounds);
 
-    @Query("SELECT * FROM weekly_sound_measure")
+    @Query("SELECT * FROM weekly_sound_measure ORDER BY day ASC")
     Sound[] getAll();
 
     @Query("UPDATE weekly_sound_measure SET daily_amount_decibel = daily_amount_decibel + :value, max_decibel = :maxDb WHERE day = :day")

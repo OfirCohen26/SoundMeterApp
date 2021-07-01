@@ -72,7 +72,7 @@ public class Fragment_Bar_Chart extends Fragment {
     private Runnable mSleepTask = new Runnable() {
         public void run() {
             sounds = DatabaseClient.getInstance(getActivity().getApplicationContext()).getAppDatabase().soundDao().getAll();
-            Arrays.sort(sounds);
+            //Arrays.sort(sounds);
 
             mHandler.postDelayed(new Runnable() {
                 @Override
