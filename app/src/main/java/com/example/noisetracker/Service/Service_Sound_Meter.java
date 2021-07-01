@@ -86,7 +86,6 @@ public class Service_Sound_Meter extends Service {
         public void run() {
             calendar = Calendar.getInstance();
             int day = calendar.get(Calendar.DAY_OF_WEEK);
-
             liveDb = getAmplitude();
             double toSend = Math.round(liveDb);
             if (toSend != 0.0) { // Make sure thread stops sending measurement if no input sound detected
@@ -118,13 +117,10 @@ public class Service_Sound_Meter extends Service {
                 int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
                 DatabaseClient.getInstance(getApplicationContext()).getAppDatabase().soundDao().
                         insertAll(new Sound(dayOfWeek, date));
-                Log.i("date in task", date);
-                Log.d("day in dayOfWeek", "" + dayOfWeek);
+
             }
             // Init media recorder
             startRecorder();
-            //Noise monitoring start
-            // Runnable(mPollTask) will execute after POLL_INTERVAL
             mHandler.postDelayed(mPollTask, START_RECORD_DELAY_LENGTH);
         }
     };
@@ -138,7 +134,7 @@ public class Service_Sound_Meter extends Service {
 
     private void stopRecording() {
         if (mRecorder != null) {
-            // Stopping the recorder when service is destroyed
+            // Stopping the recorder when service is stopped
             stopRecorder();
         }
     }

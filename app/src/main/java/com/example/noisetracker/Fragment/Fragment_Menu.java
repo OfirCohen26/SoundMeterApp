@@ -38,7 +38,6 @@ public class Fragment_Menu  extends Fragment {
         home_page_BTN_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("start", "start");
                 startMyService();
             }
         });
@@ -46,7 +45,6 @@ public class Fragment_Menu  extends Fragment {
         home_page_BTN_finish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("finish", "finish");
                 stopMyService();
             }
         });

@@ -39,6 +39,8 @@ public class Fragment_Bar_Chart extends Fragment {
 
     private final int INIT_BAR_CHART_DELAY_LENGTH = 300;
 
+    private final int OFFSET = 0;
+
     private BarChart bar_chart_BAR_barChart;
 
     private Thread mThread;
@@ -47,13 +49,17 @@ public class Fragment_Bar_Chart extends Fragment {
 
     private Handler mHandler = new Handler();
 
+
     @Nullable
     @Override
+    // creates and returns the view hierarchy associated with the fragment.
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_bar_chart, container, false);
     }
 
     @Override
+    //Called immediately after "onCreateView" has returned,
+    // but before any saved state has been restored in to the view.
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         findViews(view);
         start();
@@ -143,7 +149,7 @@ public class Fragment_Bar_Chart extends Fragment {
                             Toast toast = Toast.makeText(getActivity().getApplicationContext(),
                                     "Date: " + sounds[(int) pe.getX()].getDate() + "\nMax dB: " + sounds[(int) pe.getX()].getMaxDb() + " dB"
                                             + "\nAvg dB: " + (int) sounds[(int) pe.getX()].dailyAmountDb / 24 + " dB", Toast.LENGTH_LONG);
-                            toast.setGravity(Gravity.CENTER, 0, 0);
+                            toast.setGravity(Gravity.CENTER, OFFSET, OFFSET);
                             toast.show();
                         }
                     }
