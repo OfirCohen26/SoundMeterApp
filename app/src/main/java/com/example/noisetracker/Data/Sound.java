@@ -9,12 +9,13 @@ import androidx.room.PrimaryKey;
 
 @Entity(tableName = "weekly_sound_measure")
 public class Sound implements Comparable<Sound> {
-    @PrimaryKey(autoGenerate = true)
-    public int uid;
+//    @PrimaryKey(autoGenerate = true)
+//    public int uid;
 
     @ColumnInfo(name = "date")
     public String date;
 
+    @PrimaryKey
     @ColumnInfo(name = "day")
     public int day;
 
@@ -52,9 +53,9 @@ public class Sound implements Comparable<Sound> {
         this.avgDb = 0;
         this.maxDb = 0;
     }
-    public int getUid() {
-        return uid;
-    }
+//    public int getUid() {
+//        return uid;
+//    }
 
     public String getDate() {
         return date;

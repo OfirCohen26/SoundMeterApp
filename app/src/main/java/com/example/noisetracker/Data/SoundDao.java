@@ -19,6 +19,12 @@ public interface SoundDao {
     @Query("UPDATE weekly_sound_measure SET daily_amount_decibel = daily_amount_decibel + :value, max_decibel = :maxDb WHERE day = :day")
     public void incrementDbValue(int day, double value, double maxDb);
 
+    @Query("UPDATE weekly_sound_measure SET daily_amount_decibel = 0, max_decibel = 0, date = :date  WHERE day = :day")
+    public void zeroDbValue(int day, String date);
+
+    @Query("SELECT date FROM weekly_sound_measure WHERE day = :day")
+    String getDateFromDataBase(int day);
+
     @Query("DELETE FROM weekly_sound_measure")
     public void deleteAll();
 }

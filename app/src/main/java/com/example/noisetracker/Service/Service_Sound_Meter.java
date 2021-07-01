@@ -58,6 +58,8 @@ public class Service_Sound_Meter extends Service {
 
     Calendar calendar;
 
+    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         String action = intent.getAction();
@@ -86,6 +88,7 @@ public class Service_Sound_Meter extends Service {
         public void run() {
             calendar = Calendar.getInstance();
             int day = calendar.get(Calendar.DAY_OF_WEEK);
+            String date = sdf.format(calendar.getTime());
             liveDb = getAmplitude();
             double toSend = Math.round(liveDb);
             if (toSend != 0.0) { // Make sure thread stops sending measurement if no input sound detected
@@ -95,8 +98,15 @@ public class Service_Sound_Meter extends Service {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        Log.d("day", "" + day);
-                        DatabaseClient.getInstance(getApplicationContext()).getAppDatabase().soundDao().incrementDbValue(day, toSend, maxDb);
+                        String dbDate = DatabaseClient.getInstance(getApplicationContext()).getAppDatabase().soundDao().getDateFromDataBase(day);
+                        Log.d(" dbDate", "" + dbDate);
+                        Log.d(" date", "" + date);
+                        if(date.equals(dbDate))
+                            DatabaseClient.getInstance(getApplicationContext()).getAppDatabase().soundDao().incrementDbValue(day, toSend, maxDb);
+                        else {
+                            Log.d(" change date", "zeroo");
+                            maxDb = 0.0;
+                            DatabaseClient.getInstance(getApplicationContext()).getAppDatabase().soundDao().zeroDbValue(day,date);}
                     }
                 }).start();
                 Log.d("toSend", "" + toSend);
@@ -109,7 +119,6 @@ public class Service_Sound_Meter extends Service {
         public void run() {
             //Clean Database
             DatabaseClient.getInstance(getApplicationContext()).getAppDatabase().soundDao().deleteAll();
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
             for (int i = 0; i < 7; i++) {
                 calendar = new GregorianCalendar();
                 calendar.add(Calendar.DATE, i);
