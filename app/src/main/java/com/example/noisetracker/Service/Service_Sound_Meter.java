@@ -58,6 +58,8 @@ public class Service_Sound_Meter extends Service {
 
     Calendar calendar;
 
+    String dates[] = new String[7];
+
     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
     @Override
@@ -98,14 +100,16 @@ public class Service_Sound_Meter extends Service {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        String dbDate = DatabaseClient.getInstance(getApplicationContext()).getAppDatabase().soundDao().getDateFromDataBase(day);
-                        Log.d(" dbDate", "" + dbDate);
+                       // String dbDate = DatabaseClient.getInstance(getApplicationContext()).getAppDatabase().soundDao().getDateFromDataBase(day);
+                     //   Log.d(" dbDate", "" + dbDate);
                         Log.d(" date", "" + date);
-                        if(date.equals(dbDate))
+                        Log.d(" dates[day-1])", "" + dates[day-1]);
+                        if(date.equals(dates[day-1]))
                             DatabaseClient.getInstance(getApplicationContext()).getAppDatabase().soundDao().incrementDbValue(day, toSend, maxDb);
                         else {
                             Log.d(" change date", "zeroo");
                             maxDb = 0.0;
+                            dates[day-1] = date;
                             DatabaseClient.getInstance(getApplicationContext()).getAppDatabase().soundDao().zeroDbValue(day,date);}
                     }
                 }).start();
@@ -124,11 +128,12 @@ public class Service_Sound_Meter extends Service {
                 calendar.add(Calendar.DATE, i);
                 String date = sdf.format(calendar.getTime());
                 int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+                dates[dayOfWeek - 1] = date;
                 DatabaseClient.getInstance(getApplicationContext()).getAppDatabase().soundDao().
                         insertAll(new Sound(dayOfWeek, date));
 
             }
-            // Init media recorder
+                // Init media recorder
             startRecorder();
             mHandler.postDelayed(mPollTask, START_RECORD_DELAY_LENGTH);
         }
