@@ -34,6 +34,7 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class Fragment_Bar_Chart extends Fragment {
 
@@ -45,7 +46,9 @@ public class Fragment_Bar_Chart extends Fragment {
 
     private Thread mThread;
 
-    Sound sounds[];
+    //Sound sounds[];
+
+    List<Sound> sounds;
 
     private Handler mHandler = new Handler();
 
@@ -62,6 +65,7 @@ public class Fragment_Bar_Chart extends Fragment {
     // but before any saved state has been restored in to the view.
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         findViews(view);
+        sounds = new ArrayList<Sound>();
         start();
     }
 
@@ -95,11 +99,12 @@ public class Fragment_Bar_Chart extends Fragment {
         String[] labels = {"Sun", "Mond", "Tues", "Wed", "Thus", "Fri", "sat"};
         ArrayList<BarEntry> soundLevel = new ArrayList<>();
 
-        Log.d(" ", "sound lengh" + sounds.length);
+        Log.d(" ", "sound lengh" + sounds.size());
 
-        if (sounds.length > 0) {
+        if (sounds.size() > 0) {
             for (int i = 0; i < 7; i++) {
-                soundLevel.add(new BarEntry(i, (int) sounds[i].getDailyAmountDb()));
+                soundLevel.add(new BarEntry(i, (int) sounds.get(i).getDailyAmountDb()));
+                Log.d("in lop", "" +(int) sounds.get(i).getDailyAmountDb());
             }
         } else {
             for (int i = 0; i < 7; i++) {
@@ -133,7 +138,7 @@ public class Fragment_Bar_Chart extends Fragment {
 
         bar_chart_BAR_barChart.setData(barData);
 
-        if (sounds.length > 0) {
+        if (sounds.size() > 0) {
             onChartValueSelected();
         }
     }
@@ -145,10 +150,11 @@ public class Fragment_Bar_Chart extends Fragment {
                     @Override
                     public void onValueSelected(Entry e, Highlight h) {
                         BarEntry pe = (BarEntry) e;
-                        if (sounds[(int) pe.getX()].dailyAmountDb > 0) {
+                        if(sounds.get((int) pe.getX()).dailyAmountDb > 0)
+                        {
                             Toast toast = Toast.makeText(getActivity().getApplicationContext(),
-                                    "Date: " + sounds[(int) pe.getX()].getDate() + "\nMax dB: " + sounds[(int) pe.getX()].getMaxDb() + " dB"
-                                            + "\nAvg dB: " + (int) sounds[(int) pe.getX()].dailyAmountDb / 24 + " dB", Toast.LENGTH_LONG);
+                                    "Date: " +sounds.get((int) pe.getX()).getDate() + "\nMax dB: " + (int) sounds.get((int) pe.getX()).getMaxDb() + " dB"
+                                            + "\nAvg dB: " + (int) sounds.get((int) pe.getX()).dailyAmountDb / 24 + " dB", Toast.LENGTH_LONG);
                             toast.setGravity(Gravity.CENTER, OFFSET, OFFSET);
                             toast.show();
                         }
